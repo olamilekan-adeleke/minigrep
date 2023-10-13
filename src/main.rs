@@ -1,6 +1,7 @@
 use std::env;
 use std::process;
 
+use minigrep::run;
 use minigrep::Config;
 
 fn main() {
@@ -11,7 +12,7 @@ fn main() {
         process::exit(1);
     });
 
-    if let Err(err) = minigrep::run(config) {
+    if let Err(err) = run(config) {
         eprintln!("Application stop due to error: {}", err);
         process::exit(1);
     }
