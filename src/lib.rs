@@ -10,9 +10,9 @@ pub enum ConfigOptions {
 }
 
 pub struct Config {
-    query: String,
-    file_name: String,
-    option: ConfigOptions,
+    pub query: String,
+    pub file_name: String,
+    pub option: ConfigOptions,
 }
 
 impl Config {
@@ -32,7 +32,7 @@ impl Config {
             query = args[2].clone();
             file_name = args[3].clone();
         } else {
-            config_option = ConfigOptions::None;
+            config_option = ConfigOptions::CaseInSensitive;
             query = args[1].clone();
             file_name = args[2].clone();
         }
@@ -46,10 +46,11 @@ impl Config {
 
     fn prase_str_to_options(option: String) -> ConfigOptions {
         match option.as_str() {
-            "-i" => ConfigOptions::CaseSensitive,
+            "-i" => ConfigOptions::CaseInSensitive,
+            "-e" => ConfigOptions::CaseSensitive,
             "-c" => ConfigOptions::CountOccurrence,
             "-n" => ConfigOptions::WithLineNumber,
-            _ => ConfigOptions::CaseInSensitive,
+            _ => ConfigOptions::None,
         }
     }
 }
@@ -57,7 +58,15 @@ impl Config {
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let file_content = fs::read_to_string(config.file_name)?;
 
-    for line in search(&config.query, &file_content) {
+    let lines = match config.option {
+        ConfigOptions::CaseInSensitive => search(&config.query, &file_content),
+        ConfigOptions::CaseSensitive => vec![],
+        ConfigOptions::CountOccurrence => vec![],
+        ConfigOptions::WithLineNumber => vec![],
+        ConfigOptions::None => vec![],
+    };
+
+    for line in lines {
         println!("{}", line);
     }
 
