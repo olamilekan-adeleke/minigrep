@@ -1,18 +1,34 @@
 use std::error::Error;
 use std::fs;
 
-pub mod config;
+mod config;
 pub use config::Config;
 use config::ConfigOptions;
+
+mod action_type;
+use action_type::search_case_insensitive;
+use action_type::search_case_sensitive;
+use action_type::search_count_occurrence;
+use action_type::search_with_line_number;
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let file_content = fs::read_to_string(config.file_name)?;
 
-    let lines = match config.option {
-        ConfigOptions::CaseInSensitive => search(&config.query, &file_content),
-        ConfigOptions::CaseSensitive => vec![],
-        ConfigOptions::CountOccurrence => vec![],
-        ConfigOptions::WithLineNumber => vec![],
+    println!("{:?}", &config.option);
+    
+    let lines: Vec<String> = match config.option {
+        ConfigOptions::CaseInSensitive => {
+            search_case_insensitive(&config.query, &file_content)
+        }
+        ConfigOptions::CaseSensitive => {
+            search_case_sensitive(&config.query, &file_content)
+        }
+        ConfigOptions::CountOccurrence => {
+            search_count_occurrence(&config.query, &file_content)
+        }
+        ConfigOptions::WithLineNumber => {
+            search_with_line_number(&config.query, &file_content)
+        }
         ConfigOptions::None => vec![],
     };
 
@@ -21,27 +37,4 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     }
 
     Ok(())
-}
-
-pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    contents
-        .lines()
-        .filter(|line| line.contains(query))
-        .collect()
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn one_result() {
-        let query = "duct";
-        let contents = "\
-                        Rust:
-                        safe, fast, productive.
-                        Pick three.";
-
-        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
-    }
 }

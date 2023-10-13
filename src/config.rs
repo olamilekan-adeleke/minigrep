@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Config {
     pub query: String,
     pub file_name: String,
@@ -44,6 +45,7 @@ impl Config {
     }
 }
 
+#[derive(Debug)]
 pub enum ConfigOptions {
     CaseSensitive,
     CaseInSensitive,
