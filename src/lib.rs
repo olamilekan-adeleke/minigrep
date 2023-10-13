@@ -14,8 +14,6 @@ use action_type::search_with_line_number;
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let file_content = fs::read_to_string(config.file_name)?;
 
-    println!("{:?}", &config.option);
-    
     let lines: Vec<String> = match config.option {
         ConfigOptions::CaseInSensitive => {
             search_case_insensitive(&config.query, &file_content)

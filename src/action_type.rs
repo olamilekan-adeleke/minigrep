@@ -1,4 +1,7 @@
+use std::vec;
+
 pub fn search_case_insensitive(query: &str, contents: &str) -> Vec<String> {
+    let query = query.to_lowercase();
     let result = contents
         .lines()
         .filter(|line| line.to_lowercase().contains(&query))
@@ -9,21 +12,34 @@ pub fn search_case_insensitive(query: &str, contents: &str) -> Vec<String> {
 }
 
 pub fn search_case_sensitive(query: &str, contents: &str) -> Vec<String> {
-    let query = query.to_lowercase();
     contents
         .lines()
-        .filter(|line| line.to_lowercase().contains(&query))
+        .filter(|line| line.contains(&query))
         .map(|e| e.to_string())
         .collect()
 }
 
 pub fn search_with_line_number(query: &str, contents: &str) -> Vec<String> {
-    let result = search_case_insensitive(query, contents);
-    result
-        .into_iter()
-        .enumerate()
-        .map(|(index, e)| format!("{}:{}", index, e))
-        .collect::<Vec<String>>()
+    let query = query.to_lowercase();
+    let mut lines: Vec<String> = vec![];
+
+    let mut current_index = 1;
+    for e in contents.lines() {
+        if e.to_lowercase().contains(&query) {
+            lines.push(format!("{}: {}", current_index, e));
+        }
+        current_index += 1;
+    }
+
+    lines
+
+    // Old Version
+    // let result = search_case_insensitive(query, contents);
+    // result
+    //     .into_iter()
+    //     .enumerate()
+    //     .map(|(index, e)| format!("{}:{}", index, e))
+    //     .collect::<Vec<String>>()
 }
 
 pub fn search_count_occurrence(query: &str, contents: &str) -> Vec<String> {
