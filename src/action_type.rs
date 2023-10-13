@@ -32,14 +32,6 @@ pub fn search_with_line_number(query: &str, contents: &str) -> Vec<String> {
     }
 
     lines
-
-    // Old Version
-    // let result = search_case_insensitive(query, contents);
-    // result
-    //     .into_iter()
-    //     .enumerate()
-    //     .map(|(index, e)| format!("{}:{}", index, e))
-    //     .collect::<Vec<String>>()
 }
 
 pub fn search_count_occurrence(query: &str, contents: &str) -> Vec<String> {
