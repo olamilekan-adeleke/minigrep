@@ -54,7 +54,6 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
             colored_text.write_str(" ").unwrap();
         }
 
-        colored_text.to_string();
         println!("{}", colored_text);
     }
 
